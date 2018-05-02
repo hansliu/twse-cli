@@ -127,7 +127,7 @@ def main():
 
   # init config
   if not os.path.isfile(stock_config):
-    with open(os.path.expanduser(stock_config), 'w', encoding='UTF-8') as outf:
+    with open(os.path.expanduser(stock_config), 'w', encoding='utf-8') as outf:
       outf.write('0050\n')
       outf.write('0056\n')
 
@@ -142,7 +142,7 @@ def main():
   if len(argv.symbol) == 0:
     try:
       print('讀取設定檔: {}'.format(os.path.expanduser(stock_config)))
-      with open(os.path.expanduser(stock_config), 'r', encoding='UTF-8') as inf:
+      with open(os.path.expanduser(stock_config), 'r', encoding='utf-8') as inf:
         for line in inf:
           if line.strip():
             stock_symbols.append(line.strip())

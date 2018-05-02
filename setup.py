@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 # read the contents of your README file
 from os import path
@@ -9,7 +9,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 setup(
   name='twsecli',
   packages=['twsecli'],
-  version='0.1.6',
+  version='0.1.7',
   description='TWSE unofficial command-line interface',
   long_description=long_description,
   long_description_content_type='text/markdown',
@@ -19,6 +19,7 @@ setup(
   keywords=['twse'],
   python_requires='>=3',
   classifiers=[
+    'License :: OSI Approved :: MIT License',
     'Programming Language :: Python :: 3',
   ],
   entry_points={
