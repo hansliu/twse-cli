@@ -3,4 +3,12 @@ python:
   - "3.6"
 install:
   - pip install -r requirements.txt
-script: nosetests
+script:
+  - nosetests
+deploy:
+  provider: pypi
+  user: "$pypitest_user"
+  password: "$pypitest_pass"
+  server: "https://test.pypi.org/legacy/"
+  on:
+    branch: deploy-test
