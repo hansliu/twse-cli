@@ -78,7 +78,7 @@ class TWSECLI(object):
     payload = {
       'json': 1,
       '_': self.timestamp,
-      'ch': stock_symbol + '.tw'
+      'ch': '{}.tw'.format(stock_symbol)
     }
     r = requests.get(api_get_stock, headers=self.headers, params=payload)
     return r.json()['msgArray'][0]['key']
@@ -141,16 +141,16 @@ def main():
   if argv.interval:
     stock_interval = argv.interval
 
-  # twsecli object
-  twsecli = twsecli()
+  # create object
+  twse_cli = TWSECLI()
   for stock_symbol in stock_symbols:
-    key = twsecli.get_stock_key(stock_symbol)
+    key = twse_cli.get_stock_key(stock_symbol)
     stock_keys.append(key)
   while True:
     if stock_interval:
       os.system('clear')
       print('Refresh every {}s'.format(stock_interval))
-    stock_infos = twsecli.get_stock_info(stock_keys)
+    stock_infos = twse_cli.get_stock_info(stock_keys)
     print2terminal(stock_infos)
     if stock_interval:
       time.sleep(argv.interval)
@@ -158,7 +158,7 @@ def main():
       break
 
   # gc object
-  del twsecli
+  del twse_cli
   pass
 
 

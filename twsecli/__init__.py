@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*- #
 
-from twsecli import *
+from core import *
