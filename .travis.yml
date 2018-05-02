@@ -10,5 +10,3 @@ deploy:
   user: "$pypitest_user"
   password: "$pypitest_pass"
   server: "https://test.pypi.org/legacy/"
-  on:
-    branch: deploy-test
