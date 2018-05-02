@@ -2,7 +2,7 @@ from distutils.core import setup
 setup(
   name = 'twsecli',
   packages = ['twsecli'],
-  version = '0.1.3',
+  version = '0.1.4',
   description = 'TWSE unofficial command-line interface',
   author = 'Hans Liu',
   author_email = 'hansliu.tw@gmail.com',
