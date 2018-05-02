@@ -6,6 +6,7 @@ import os, sys, argparse
 import time
 import requests
 
+
 """
 http://mis.twse.com.tw API list
 getChartOhlcStatis

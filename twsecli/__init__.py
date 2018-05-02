@@ -1,3 +1,11 @@
 # -*- coding: utf-8 -*- #
 
-from core import *
+import twsecli.core
+
+
+def main():
+  twsecli.core.main()
+
+
+if __name__ == '__main__':
+  main()
