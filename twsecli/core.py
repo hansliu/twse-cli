@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*- #
 
 import re
-import os, sys, argparse
+import os
 import time
+import argparse
 import requests
 
 
@@ -57,7 +58,24 @@ def colored(s, color):
     return '\033[1;31m' + s + '\033[m'
 
 
-class TWSECLI(object):
+def print2terminal(stock_infos):
+  if stock_infos:
+    print('\n代號  商品          成交   漲跌    幅度    單量    總量   最高   最低   開盤')
+    for stock in stock_infos:
+      change = float(stock['z']) - float(stock['o'])
+      change_p = change / float(stock['o'])
+      stock_name = alignment(stock['n'], 11)
+      stock_price = colored('{:>6}'.format(stock['z']), 'green') if change >= 0 else colored('{:>6}'.format(stock['z']), 'red')
+      stock_change = colored('{:>+6.2f}'.format(change), 'green') if change >= 0 else colored('{:>+6.2f}'.format(change), 'red')
+      stock_change_p = colored('{:>+7.2%}'.format(change_p), 'green') if change >= 0 else colored('{:>+7.2%}'.format(change_p), 'red')
+      stock_change_high = colored('{:>6}'.format(stock['h']), 'green') if float(stock['h']) - float(stock['o']) >= 0 else colored('{:>6}'.format(stock['h']), 'red')
+      stock_change_low = colored('{:>6}'.format(stock['l']), 'green') if float(stock['l']) - float(stock['o']) >= 0 else colored('{:>6}'.format(stock['l']), 'red')
+      print("{:<5} {} {} {} {} {:>7,} {:>7,} {} {} {:>6}".format(stock['c'], stock_name, stock_price, stock_change, stock_change_p, int(stock['tv']), int(stock['v']), stock_change_high, stock_change_low, stock['o']))
+    else:
+      print('\n資料時間: {} {}'.format(stock['d'], stock['t']))
+
+
+class TWSELIB(object):
 
   def __init__(self):
     self.timestamp = int(time.time() * 1000) + 1000
@@ -101,36 +119,30 @@ class TWSECLI(object):
       return []
 
 
-def print2terminal(stock_infos):
-  if stock_infos:
-    print('\n代號  商品          成交   漲跌    幅度    單量    總量   最高   最低   開盤')
-    for stock in stock_infos:
-      change = float(stock['z']) - float(stock['o'])
-      change_p = change / float(stock['o'])
-      stock_name = alignment(stock['n'], 11)
-      stock_price = colored('{:>6}'.format(stock['z']), 'green') if change >= 0 else colored('{:>6}'.format(stock['z']), 'red')
-      stock_change = colored('{:>+6.2f}'.format(change), 'green') if change >= 0 else colored('{:>+6.2f}'.format(change), 'red')
-      stock_change_p = colored('{:>+7.2%}'.format(change_p), 'green') if change >= 0 else colored('{:>+7.2%}'.format(change_p), 'red')
-      stock_change_high = colored('{:>6}'.format(stock['h']), 'green') if float(stock['h']) - float(stock['o']) >= 0 else colored('{:>6}'.format(stock['h']), 'red')
-      stock_change_low = colored('{:>6}'.format(stock['l']), 'green') if float(stock['l']) - float(stock['o']) >= 0 else colored('{:>6}'.format(stock['l']), 'red')
-      print("{:<5} {} {} {} {} {:>7,} {:>7,} {} {} {:>6}".format(stock['c'], stock_name, stock_price, stock_change, stock_change_p, int(stock['tv']), int(stock['v']), stock_change_high, stock_change_low, stock['o']))
-    else:
-      print('\n資料時間: {} {}'.format(stock['d'], stock['t']))
-
-
 def main():
   stock_keys = []
   stock_symbols = []
   stock_interval = None
+  stock_config = '~/.twsecli_config'
+
+  # init config
+  if not os.path.isfile(stock_config):
+    with open(os.path.expanduser(stock_config), 'w', encoding='UTF-8') as outf:
+      outf.write('0050\n')
+      outf.write('0056\n')
 
   # argparse
   parser = argparse.ArgumentParser()
   parser.add_argument("symbol", nargs="*", help="stock symbol", type=int)
-  parser.add_argument("-n", "--interval", metavar="", help="seconds to wait between updates", type=int)
+  parser.add_argument("-n", "--interval", metavar="", help="seconds to wait between updates, minimum 60s", type=int)
+  parser.add_argument("-c", "--config", metavar="", help="stock symbol config, default path ~/.twsecli_config", type=int)
   argv = parser.parse_args()
+  if argv.config:
+    stock_config = argv.config
   if len(argv.symbol) == 0:
     try:
-      with open(os.path.expanduser('~/.twsecli/config'), 'r', encoding='UTF-8') as inf:
+      print('讀取設定檔: {}'.format(os.path.expanduser(stock_config)))
+      with open(os.path.expanduser(stock_config), 'r', encoding='UTF-8') as inf:
         for line in inf:
           if line.strip():
             stock_symbols.append(line.strip())
@@ -140,26 +152,29 @@ def main():
   else:
     stock_symbols = argv.symbol
   if argv.interval:
-    stock_interval = argv.interval
+    stock_interval = 60 if argv.interval < 60 else argv.interval
 
   # create object
-  twse_cli = TWSECLI()
+  twse_lib = TWSELIB()
   for stock_symbol in stock_symbols:
-    key = twse_cli.get_stock_key(stock_symbol)
+    key = twse_lib.get_stock_key(stock_symbol)
     stock_keys.append(key)
   while True:
-    if stock_interval:
-      os.system('clear')
-      print('Refresh every {}s'.format(stock_interval))
-    stock_infos = twse_cli.get_stock_info(stock_keys)
-    print2terminal(stock_infos)
-    if stock_interval:
-      time.sleep(argv.interval)
+    stock_infos = twse_lib.get_stock_info(stock_keys)
+    if stock_infos:
+      if stock_interval:
+        os.system('clear')
+      print2terminal(stock_infos)
+      if stock_interval:
+        print('資料更新頻率: {}s'.format(stock_interval))
+        time.sleep(argv.interval)
+      else:
+        break
     else:
       break
 
   # gc object
-  del twse_cli
+  del twse_lib
   pass
 
 
