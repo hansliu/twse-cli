@@ -1,17 +1,11 @@
 from setuptools import setup
 
-# read the contents of your README file
-from os import path
-this_directory = path.abspath(path.dirname(__file__))
-with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
-
 setup(
   name='twsecli',
   packages=['twsecli'],
   version='0.1.7',
   description='TWSE unofficial command-line interface',
-  long_description=long_description,
+  long_description=open('README.md', encoding='utf-8').read(),
   long_description_content_type='text/markdown',
   author='Hans Liu',
   author_email='hansliu.tw@gmail.com',
