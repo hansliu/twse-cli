@@ -6,7 +6,7 @@ install:
 script:
   - nosetests
 deploy:
-  provider: pypi
-  user: "$pypitest_user"
-  password: "$pypitest_pass"
-  server: "https://test.pypi.org/legacy/"
+  - provider: pypi
+    user: "$pypitest_user"
+    password: "$pypitest_pass"
+    server: "https://test.pypi.org/legacy/"
