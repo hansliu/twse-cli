@@ -5,7 +5,7 @@ TWSE unofficial command line interface
 
 提供 Cli 介面，根據台灣股票代號，顯示台灣證券交易所即時股價。
 
-[Imgur](https://i.imgur.com/RqWAhpm.png)
+![Imgur](https://i.imgur.com/RqWAhpm.png)
 
 ## Install / 安裝
 
