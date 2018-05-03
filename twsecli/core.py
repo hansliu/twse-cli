@@ -126,7 +126,7 @@ def main():
   stock_config = '~/.twsecli_config'
 
   # init config
-  if not os.path.isfile(stock_config):
+  if not os.path.isfile(os.path.expanduser(stock_config)):
     with open(os.path.expanduser(stock_config), 'w', encoding='utf-8') as outf:
       outf.write('0050\n')
       outf.write('0056\n')
