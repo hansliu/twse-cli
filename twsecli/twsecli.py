@@ -58,23 +58,6 @@ def colored(s, color):
     return '\033[1;31m' + s + '\033[m'
 
 
-def print2terminal(stock_infos):
-  if stock_infos:
-    print('\n代號  商品          成交   漲跌    幅度    單量    總量   最高   最低   開盤')
-    for stock in stock_infos:
-      change = float(stock['z']) - float(stock['y'])
-      change_p = change / float(stock['y'])
-      stock_name = alignment(stock['n'], 11)
-      stock_price = colored('{:>6}'.format(stock['z']), 'green') if change >= 0 else colored('{:>6}'.format(stock['z']), 'red')
-      stock_change = colored('{:>+6.2f}'.format(change), 'green') if change >= 0 else colored('{:>+6.2f}'.format(change), 'red')
-      stock_change_p = colored('{:>+7.2%}'.format(change_p), 'green') if change >= 0 else colored('{:>+7.2%}'.format(change_p), 'red')
-      stock_change_high = colored('{:>6}'.format(stock['h']), 'green') if float(stock['h']) - float(stock['y']) >= 0 else colored('{:>6}'.format(stock['h']), 'red')
-      stock_change_low = colored('{:>6}'.format(stock['l']), 'green') if float(stock['l']) - float(stock['y']) >= 0 else colored('{:>6}'.format(stock['l']), 'red')
-      print("{:<5} {} {} {} {} {:>7,} {:>7,} {} {} {:>6}".format(stock['c'], stock_name, stock_price, stock_change, stock_change_p, int(stock['tv']), int(stock['v']), stock_change_high, stock_change_low, stock['o']))
-    else:
-      print('\n資料時間: {} {}'.format(stock['d'], stock['t']))
-
-
 class TWSELIB(object):
 
   def __init__(self):
@@ -117,6 +100,23 @@ class TWSELIB(object):
     except KeyError as err:
       print("Key error: {}".format(err))
       return []
+
+
+def print2terminal(stock_infos):
+  if stock_infos:
+    print('\n代號  商品          成交   漲跌    幅度    單量    總量   最高   最低   開盤')
+    for stock in stock_infos:
+      change = float(stock['z']) - float(stock['y'])
+      change_p = change / float(stock['y'])
+      stock_name = alignment(stock['n'], 11)
+      stock_price = colored('{:>6}'.format(stock['z']), 'green') if change >= 0 else colored('{:>6}'.format(stock['z']), 'red')
+      stock_change = colored('{:>+6.2f}'.format(change), 'green') if change >= 0 else colored('{:>+6.2f}'.format(change), 'red')
+      stock_change_p = colored('{:>+7.2%}'.format(change_p), 'green') if change >= 0 else colored('{:>+7.2%}'.format(change_p), 'red')
+      stock_change_high = colored('{:>6}'.format(stock['h']), 'green') if float(stock['h']) - float(stock['y']) >= 0 else colored('{:>6}'.format(stock['h']), 'red')
+      stock_change_low = colored('{:>6}'.format(stock['l']), 'green') if float(stock['l']) - float(stock['y']) >= 0 else colored('{:>6}'.format(stock['l']), 'red')
+      print("{:<5} {} {} {} {} {:>7,} {:>7,} {} {} {:>6}".format(stock['c'], stock_name, stock_price, stock_change, stock_change_p, int(stock['tv']), int(stock['v']), stock_change_high, stock_change_low, stock['o']))
+    else:
+      print('\n資料時間: {} {}'.format(stock['d'], stock['t']))
 
 
 def main():

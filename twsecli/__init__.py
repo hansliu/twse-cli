@@ -1,10 +1,11 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*- #
 
-import twsecli.core
+from twsecli import twsecli
 
 
 def main():
-  twsecli.core.main()
+  twsecli.main()
 
 
 if __name__ == '__main__':
