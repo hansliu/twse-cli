@@ -1,4 +1,4 @@
-![Travis](https://img.shields.io/travis/hansliu/twsecli.svg) [![PyPI version](https://badge.fury.io/py/twsecli.svg)](https://badge.fury.io/py/twsecli) [![GitHub license](https://img.shields.io/github/license/hansliu/twsecli.svg)](https://github.com/hansliu/twsecli/blob/master/LICENSE)
+[![Travis Build Status](https://travis-ci.org/hansliu/twsecli.svg?branch=master)](https://travis-ci.org/hansliu/twsecli) [![PyPI version](https://badge.fury.io/py/twsecli.svg)](https://badge.fury.io/py/twsecli) [![GitHub license](https://img.shields.io/github/license/hansliu/twsecli.svg)](https://github.com/hansliu/twsecli/blob/master/LICENSE)
 
 # twsecli
 TWSE unofficial command line interface
