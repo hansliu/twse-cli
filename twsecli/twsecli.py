@@ -9,37 +9,11 @@ import requests
 
 
 """
-http://mis.twse.com.tw API list
-getChartOhlcStatis
-getDailyRangeOnlyKD
-getDailyRangeWithMA
-getOhlc
-getShowChart
-getStock
-getStockInfo
-getStockNames
-resetSession
-tse 上市
-otc 上櫃
-z 當盤成交價
-tv 當盤成交量
-v 累積成交量
-b 揭示買價(從高到低，以_分隔資料)
-g 揭示買量(配合b，以_分隔資料)
-a 揭示賣價(從低到高，以_分隔資料)
-f 揭示賣量(配合a，以_分隔資料)
-o 開盤
-h 最高
-l 最低
-y 昨收
-u 漲停價
-w 跌停價
-tlong epoch毫秒數
-d 最近交易日期(YYYYMMDD)
-t 最近成交時刻(HH:MI:SS)
-c 股票代號
-n 公司簡稱
-nf 公司全名
+twse official website
+http://mis.twse.com.tw
+
+twse API information
+https://github.com/Asoul/tsrtc
 """
 
 
@@ -62,18 +36,19 @@ class TWSELIB(object):
 
   def __init__(self):
     self.timestamp = int(time.time() * 1000) + 1000
-    self.headers = {
-      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
-      'Content-Type': 'text/html; charset=UTF-8',
-      'Accept-Language': 'zh-TW'
-    }
-    self.headers['Cookie'] = self.get_cookie()
+    self.__req = self.get_cookie()
     pass
 
   def get_cookie(self):
     api_get_stock_cookie = 'http://mis.twse.com.tw/stock'
-    r = requests.get(api_get_stock_cookie, headers=self.headers)
-    return r.headers['Set-Cookie']
+    headers = {
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
+      'Content-Type': 'text/html; charset=UTF-8',
+      'Accept-Language': 'zh-TW'
+    }
+    req = requests.session()
+    res = req.get(api_get_stock_cookie, headers=headers)
+    return req
 
   def get_stock_key(self, stock_symbol):
     api_get_stock = "http://mis.twse.com.tw/stock/api/getStock.jsp"
@@ -82,8 +57,13 @@ class TWSELIB(object):
       '_': self.timestamp,
       'ch': '{}.tw'.format(stock_symbol)
     }
-    r = requests.get(api_get_stock, headers=self.headers, params=payload)
-    return r.json()['msgArray'][0]['key']
+    res = self.__req.get(api_get_stock, params=payload)
+    try:
+      if res.json()['msgArray'][0]['key']:
+        return res.json()['msgArray'][0]['key']
+    except IndexError as err:
+      print("Index error: {}".format(err))
+      return ''
 
   def get_stock_info(self, stock_keys):
     api_get_stock_info = "http://mis.twse.com.tw/stock/api/getStockInfo.jsp"
@@ -93,10 +73,10 @@ class TWSELIB(object):
       'delay': 0,
       'ex_ch': '%7C'.join(stock_keys)
     }
-    r = requests.get(api_get_stock_info, headers=self.headers, params=payload)
+    res = self.__req.get(api_get_stock_info, params=payload)
     try:
-      if r.json()['msgArray']:
-        return r.json()['msgArray']
+      if res.json()['msgArray']:
+        return res.json()['msgArray']
     except KeyError as err:
       print("Key error: {}".format(err))
       return []

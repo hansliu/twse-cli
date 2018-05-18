@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
   name='twsecli',
   packages=['twsecli'],
-  version='0.2.6',
+  version='0.3.0',
   description='TWSE unofficial command-line interface',
   long_description=open('README.md', encoding='utf-8').read(),
   long_description_content_type='text/markdown',
