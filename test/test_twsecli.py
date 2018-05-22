@@ -36,7 +36,7 @@ class TestTWSELIB(unittest.TestCase):
     del self.twse_lib
 
   def test_get_cookie(self):
-    self.assertRegex(self.twse_lib.get_cookie(), 'JSESSIONID=.+; Path=/stock')
+    self.assertIsNotNone(self.twse_lib.get_cookie())
 
   def test_get_stock_key_tse(self):
     self.assertEqual(self.twse_lib.get_stock_key('0050'), 'tse_0050.tw')
