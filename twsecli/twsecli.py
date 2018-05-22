@@ -103,11 +103,12 @@ def main():
   stock_keys = []
   stock_symbols = []
   stock_interval = None
-  stock_config = '~/.twsecli_config'
+  stock_config = os.path.expanduser('~/.config/twsecli/config')
 
   # init config
-  if not os.path.isfile(os.path.expanduser(stock_config)):
-    with open(os.path.expanduser(stock_config), 'w', encoding='utf-8') as outf:
+  if not os.path.isfile(stock_config):
+    os.makedirs(os.path.dirname(stock_config))
+    with open(stock_config, 'w', encoding='utf-8') as outf:
       outf.write('0050\n')
       outf.write('0056\n')
 
@@ -115,14 +116,14 @@ def main():
   parser = argparse.ArgumentParser()
   parser.add_argument("symbol", nargs="*", help="stock symbol", type=int)
   parser.add_argument("-n", "--interval", metavar="", help="seconds to wait between updates, minimum 60s", type=int)
-  parser.add_argument("-c", "--config", metavar="", help="stock symbol config, default path ~/.twsecli_config", type=int)
+  parser.add_argument("-c", "--config", metavar="", help="stock symbol config, default path ~/.config/twsecli/config")
   argv = parser.parse_args()
   if argv.config:
-    stock_config = argv.config
+    stock_config = os.path.expanduser(argv.config)
   if len(argv.symbol) == 0:
     try:
-      print('讀取設定檔: {}'.format(os.path.expanduser(stock_config)))
-      with open(os.path.expanduser(stock_config), 'r', encoding='utf-8') as inf:
+      print('讀取設定檔: {}'.format(stock_config))
+      with open(stock_config, 'r', encoding='utf-8') as inf:
         for line in inf:
           if line.strip():
             stock_symbols.append(line.strip())
