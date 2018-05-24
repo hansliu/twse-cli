@@ -84,7 +84,7 @@ class TWSELIB(object):
 
 def print2terminal(stock_infos):
   if stock_infos:
-    print('\n代號  商品          成交   漲跌    幅度    單量    總量   最高   最低   開盤')
+    print('\n代號  商品          成交   漲跌    幅度    單量    總量   最高   最低   開盤   昨收')
     for stock in stock_infos:
       change = float(stock['z']) - float(stock['y'])
       change_p = change / float(stock['y'])
@@ -94,7 +94,8 @@ def print2terminal(stock_infos):
       stock_change_p = colored('{:>+7.2%}'.format(change_p), 'green') if change >= 0 else colored('{:>+7.2%}'.format(change_p), 'red')
       stock_change_high = colored('{:>6}'.format(stock['h']), 'green') if float(stock['h']) - float(stock['y']) >= 0 else colored('{:>6}'.format(stock['h']), 'red')
       stock_change_low = colored('{:>6}'.format(stock['l']), 'green') if float(stock['l']) - float(stock['y']) >= 0 else colored('{:>6}'.format(stock['l']), 'red')
-      print("{:<5} {} {} {} {} {:>7,} {:>7,} {} {} {:>6}".format(stock['c'], stock_name, stock_price, stock_change, stock_change_p, int(stock['tv']), int(stock['v']), stock_change_high, stock_change_low, stock['o']))
+      stock_change_origin = colored('{:>6}'.format(stock['o']), 'green') if float(stock['l']) - float(stock['o']) >= 0 else colored('{:>6}'.format(stock['o']), 'red')
+      print("{:<5} {} {} {} {} {:>7,} {:>7,} {} {} {:>6} {:>6}".format(stock['c'], stock_name, stock_price, stock_change, stock_change_p, int(stock['tv']), int(stock['v']), stock_change_high, stock_change_low, stock_change_origin, stock['y']))
     else:
       print('\n資料時間: {} {}'.format(stock['d'], stock['t']))
 
