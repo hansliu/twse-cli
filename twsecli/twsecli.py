@@ -148,8 +148,11 @@ def main():
         os.system('clear')
       print2terminal(stock_infos)
       if stock_interval:
-        print('資料更新頻率: {}s'.format(stock_interval))
-        time.sleep(argv.interval)
+        try:
+          print('資料更新頻率: {}s'.format(stock_interval))
+          time.sleep(argv.interval)
+        except KeyboardInterrupt:
+          break
       else:
         break
     else:
