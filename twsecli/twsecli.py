@@ -80,9 +80,9 @@ class TWSELIB(object):
         if res.json()['msgArray']:
           return res.json()['msgArray']
       except KeyError as err:
-        print("Key error: {}".format(err))
-        print("Auto retry after 2 seconds...")
-        time.sleep(2)
+        print("Key error: {}, auto retry after 3 seconds...".format(err))
+        time.sleep(3)
+        self.__req = self.get_cookie()
     print("Temporary failed, please try later.")
     return []
 
