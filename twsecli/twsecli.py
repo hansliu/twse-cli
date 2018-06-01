@@ -57,7 +57,7 @@ class TWSELIB(object):
       '_': self.timestamp,
       'ch': '{}.tw'.format(stock_symbol)
     }
-    res = self.__req.get(api_get_stock, params=payload)
+    res = self.__req.get(api_get_stock, params=payload, headers=self.headers)
     try:
       if res.json()['msgArray'][0]['key']:
         return res.json()['msgArray'][0]['key']
@@ -73,7 +73,7 @@ class TWSELIB(object):
       'delay': 0,
       'ex_ch': '%7C'.join(stock_keys)
     }
-    res = self.__req.get(api_get_stock_info, params=payload)
+    res = self.__req.get(api_get_stock_info, params=payload, headers=self.headers)
     try:
       if res.json()['msgArray']:
         return res.json()['msgArray']
