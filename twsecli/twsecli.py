@@ -35,7 +35,7 @@ def colored(s, color):
 class TWSELIB(object):
 
   def __init__(self):
-    self.timestamp = int(time.time() * 1000) + 1000
+    self.timestamp = int(time.time() * 1000)
     self.headers = {
       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
       'Content-Type': 'text/html; charset=UTF-8',
@@ -46,7 +46,7 @@ class TWSELIB(object):
 
   def get_cookie(self):
     api_get_stock_cookie = 'http://mis.twse.com.tw/stock'
-    req = requests.session()
+    req = requests.Session()
     req.get(api_get_stock_cookie, headers=self.headers)
     return req
 
@@ -57,7 +57,7 @@ class TWSELIB(object):
       '_': self.timestamp,
       'ch': '{}.tw'.format(stock_symbol)
     }
-    res = self.__req.get(api_get_stock, params=payload, headers=self.headers)
+    res = self.__req.get(api_get_stock, params=payload)
     try:
       if res.json()['msgArray'][0]['key']:
         return res.json()['msgArray'][0]['key']
