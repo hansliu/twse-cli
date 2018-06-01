@@ -74,13 +74,17 @@ class TWSELIB(object):
       'delay': 0,
       'ex_ch': '%7C'.join(stock_keys)
     }
-    res = self.__req.get(api_get_stock_info, params=payload)
-    try:
-      if res.json()['msgArray']:
-        return res.json()['msgArray']
-    except KeyError as err:
-      print("Key error: {}".format(err))
-      return []
+    for _ in range(3):
+      try:
+        res = self.__req.get(api_get_stock_info, params=payload)
+        if res.json()['msgArray']:
+          return res.json()['msgArray']
+      except KeyError as err:
+        print("Key error: {}".format(err))
+        print("Auto retry after 2 seconds...")
+        time.sleep(2)
+    print("Temporary failed, please try later.")
+    return []
 
 
 def print2terminal(stock_infos):
