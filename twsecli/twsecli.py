@@ -36,18 +36,18 @@ class TWSELIB(object):
 
   def __init__(self):
     self.timestamp = int(time.time() * 1000) + 1000
+    self.headers = {
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
+      'Content-Type': 'text/html; charset=UTF-8',
+      'Accept-Language': 'zh-TW'
+    }
     self.__req = self.get_cookie()
     pass
 
   def get_cookie(self):
     api_get_stock_cookie = 'http://mis.twse.com.tw/stock'
-    headers = {
-      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
-      'Content-Type': 'text/html; charset=UTF-8',
-      'Accept-Language': 'zh-TW'
-    }
     req = requests.session()
-    res = req.get(api_get_stock_cookie, headers=headers)
+    req.get(api_get_stock_cookie, headers=self.headers)
     return req
 
   def get_stock_key(self, stock_symbol):
@@ -57,7 +57,7 @@ class TWSELIB(object):
       '_': self.timestamp,
       'ch': '{}.tw'.format(stock_symbol)
     }
-    res = self.__req.get(api_get_stock, params=payload)
+    res = self.__req.get(api_get_stock, params=payload, headers=self.headers)
     try:
       if res.json()['msgArray'][0]['key']:
         return res.json()['msgArray'][0]['key']
