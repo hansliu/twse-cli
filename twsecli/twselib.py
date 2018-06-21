@@ -17,19 +17,20 @@ https://github.com/Asoul/tsrtc
 class TWSELIB(object):
 
   def __init__(self):
-    self.timestamp = int(time.time() * 1000) + 1000
-    self.__req = self.get_cookie()
-    pass
-
-  def get_cookie(self):
-    api_get_stock_cookie = 'http://mis.twse.com.tw/stock'
-    headers = {
+    self.timestamp = int(time.time() * 1000)
+    self.headers = {
       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
       'Content-Type': 'text/html; charset=UTF-8',
       'Accept-Language': 'zh-TW'
     }
-    req = requests.session()
-    res = req.get(api_get_stock_cookie, headers=headers)
+    self.__req = self.get_cookie()
+    pass
+
+  def get_cookie(self):
+    api_get_stock_cookie = 'http://mis.twse.com.tw/stock/index.jsp'
+    req = requests.Session()
+    req.headers.update(self.headers)
+    req.get(api_get_stock_cookie)
     return req
 
   def get_stock_key(self, stock_symbol):
@@ -55,10 +56,14 @@ class TWSELIB(object):
       'delay': 0,
       'ex_ch': '%7C'.join(stock_keys)
     }
-    res = self.__req.get(api_get_stock_info, params=payload)
-    try:
-      if res.json()['msgArray']:
-        return res.json()['msgArray']
-    except KeyError as err:
-      print("Key error: {}".format(err))
-      return []
+    for _ in range(3):
+      try:
+        res = self.__req.get(api_get_stock_info, params=payload)
+        if res.json()['msgArray']:
+          return res.json()['msgArray']
+      except KeyError as err:
+        print("Key error: {}, auto retry after 3 seconds...".format(err))
+        time.sleep(3)
+        self.__req = self.get_cookie()
+    print("Temporary failed, please try later.")
+    return []
