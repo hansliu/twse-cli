@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
   name='twsecli',
   packages=['twsecli'],
-  version='0.4.1',
+  version='0.5.0',
   description='TWSE unofficial command-line interface',
   long_description=open('README.md', encoding='utf-8').read(),
   long_description_content_type='text/markdown',
@@ -18,7 +18,7 @@ setup(
   ],
   entry_points={
     'console_scripts': [
-      'twsecli=twsecli:main',
+      'twsecli=twsecli:cli',
     ],
   }
 )
