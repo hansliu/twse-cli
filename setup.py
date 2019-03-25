@@ -1,9 +1,11 @@
-from setuptools import setup
+from setuptools import setup, find_packages
+
+packages = [package for package in find_packages()]
 
 setup(
   name='twsecli',
-  packages=['twsecli'],
-  version='0.6.1',
+  packages=packages,
+  version='0.6.2',
   description='TWSE unofficial command-line interface',
   long_description=open('README.md', encoding='utf-8').read(),
   long_description_content_type='text/markdown',
