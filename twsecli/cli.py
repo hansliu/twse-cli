@@ -5,7 +5,7 @@ import os
 import re
 import time
 import click
-from twselib import TWSELIB
+from .lib import TWSELIB
 
 
 CONTEXT_SETTINGS = {'help_option_names': ['-h', '--help']}
@@ -86,7 +86,7 @@ def print2terminal(stock_infos):
     help='stock symbol config, default path ~/.config/twsecli/config',
     type=click.File('r')
 )
-def cli(config, interval, symbol):
+def main(config, interval, symbol):
     """
     The twsecil prints real-time stock price.
 
@@ -133,4 +133,4 @@ def cli(config, interval, symbol):
 
 
 if __name__ == '__main__':
-  cli()
+    main()

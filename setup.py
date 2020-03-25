@@ -26,7 +26,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'twsecli=twsecli.cli:cli',
+            'twsecli=twsecli.cli:main',
         ],
     }
 )
